@@ -1,21 +1,16 @@
 package application;
 
 import java.awt.event.*;
+import java.io.*;
 import javax.swing.*;
 
 public class Application {
-
     public static void main(String[] args) {
-        // TODO code application logic here
         JFrame f = new JFrame();
-
         f.setTitle("Ma première fenêtre");
-        f.setSize(400, 400); // par défaut la taille est (0,0) 
-        f.setLocationRelativeTo(null); // milieu de l’écran
-        f.setVisible(true); // la fenêtre est pas visible
-        f.setResizable(false); // taille inchangeable
+        f.setSize(400, 400);
+        f.setLocationRelativeTo(null);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //f.setLocation(100,100) ; // par défaut, coin supérieur gauche écran 
         JButton b = new JButton("Afficher");
         b.setBounds(150, 10, 95, 30);
         f.add(b);
@@ -24,47 +19,63 @@ public class Application {
         f.add(btn);
         JLabel l = new JLabel("Premier label", JLabel.CENTER);
         f.add(l);
-
         b.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 b.setVisible(false);
-                f.add(l);
                 l.setVisible(true);
                 TextFieldTest t = new TextFieldTest();
             }
         });
-
         btn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                btn.setVisible(false);
-                b.setVisible(false);
-                l.setVisible(false);
-                Circle c = new Circle();
                 JFrame f2 = new JFrame();
                 f2.setTitle("Ma dexieum fenêtre");
-                f2.setSize(400, 400); // par défaut la taille est (0,0) 
-                f2.setLocationRelativeTo(null); // milieu de l’écran
-                f2.setVisible(true); // la fenêtre est pas visible
-                f2.setResizable(false); // taille inchangeable
-                f2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                f2.setSize(600, 600);
+                f2.setLocationRelativeTo(null);
+                f2.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Set to dispose on close
                 JButton btn2 = new JButton("Simulate");
-                btn2.setBounds(290, 10, 95, 30);
+                btn2.setBounds(490, 10, 95, 30);
                 f2.add(btn2);
+                JButton btn3 = new JButton("modify");
+                btn3.setBounds(390, 10, 95, 30);
+                JTextArea area = new JTextArea();
+                area.setBounds(450, 50, 150, 170);
+                area.setEditable(false);
+                f2.add(area);
+                f2.add(btn3);
+                Circle c = new Circle();
                 f2.add(c);
                 btn2.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        btn2.setVisible(false);
+                        OutputStream outStream = new OutputStream() {
+                            public void write(int b) throws IOException {
+                                area.append(String.valueOf((char) b));
+                            }
+                        };
+                        System.setOut(new PrintStream(outStream));
                         WirelessNetworkSimulator w = new WirelessNetworkSimulator();
                         WirelessDevice d1 = new WirelessDevice("d1");
                         WirelessDevice d2 = new WirelessDevice("d2");
                         w.addDevice(d1);
                         w.addDevice(d2);
-                        w.simulate(5);
+                        if (c.calculateDistance() <= 200) {
+                            w.simulate(0.1);
+                        } else {
+                            System.out.println("there is no connexion");
+                        }
+                        
+                    }
+                });
+                btn3.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        
                     }
                 });
 
+                f2.setVisible(true);
             }
         });
-    }
 
+        f.setVisible(true);
+    }
 }

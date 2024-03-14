@@ -34,8 +34,8 @@ class WirelessDevice {
  this.transmettre = true;
  }
  public void transmit() {
- if (transmettre) {
- System.out.println(nom + " transmet les données");
+ if (transmettre ) {
+ System.out.println(nom + " transmit de donnees");
  }
  }
  public void startTransmission() {
